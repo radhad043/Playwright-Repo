@@ -1,5 +1,3 @@
-
-
 pipeline {
     agent{
         docker {
@@ -10,10 +8,10 @@ pipeline {
         stage('install playwright') {
             steps {
                 script {
-                    sh '
+                    sh '''
                     npm i -D @playwright/test
                     npx playwright install
-                    '
+                    '''
                 }
             }
         }
@@ -27,9 +25,10 @@ pipeline {
         stage('test') {
             steps {
                 script {
-                    sh 'npx playwright test --list
+                    sh '''
+                    npx playwright test --list
                     npx playwright test
-                    '
+                    '''
                 }
             }
         }
