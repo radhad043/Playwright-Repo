@@ -1,34 +1,20 @@
+
 pipeline {
-    agent{
-        docker {
-            image 'mcr.microsoft.com/playwright:1.51.1'
-        }
-    }
-    stages{
-        stage('install playwright') {
+    agent any
+
+    stages {
+        stage('Run Tests in Docker') {
             steps {
                 script {
-                    sh '''
-                    npm i -D @playwright/test
-                    npx playwright install
-                    '''
-                }
-            }
-        }
-        stage('help'){
-            steps {
-                script {
-                    sh 'npx playwright test --help'
-                }
-            }
-        }
-        stage('test') {
-            steps {
-                script {
-                    sh '''
-                    npx playwright test --list
-                    npx playwright test
-                    '''
+                    docker.image('mcr.microsoft.com/playwright:1.51.1').inside {
+                        sh '''
+                            npm i -D @playwright/test
+                            npx playwright install
+                            npx playwright test --help
+                            npx playwright test --list
+                            npx playwright test
+                        '''
+                    }
                 }
             }
         }
