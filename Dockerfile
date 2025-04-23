@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/playwright:v1.51.1
 
-WORKDIR /app
+WORKDIR C:\Users\SG048\Documents\Personal_Repo\Playwright-Repo
 
 COPY package*.json ./
 
