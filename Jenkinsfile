@@ -1,17 +1,45 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs "NodeJS_18" // Matches the name you configured in Jenkins
+    }
+
+    environment {
+        PLAYWRIGHT_BROWSERS_PATH = './.playwright-browsers' // Optional: isolate downloaded browsers
+    }
+
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                bat 'npm run build'
+                git url: 'https://github.com/<your-username>/Playwright-Repo.git', branch: 'main'
             }
         }
 
-        stage('Test') {
+        stage('Install Dependencies') {
             steps {
-                bat 'npm test'
+                sh 'npm install'
+            }
+        }
+
+        stage('Install Playwright Browsers') {
+            steps {
+                sh 'npx playwright install --with-deps'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh 'npx playwright test'
             }
         }
     }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'playwright-report/**', allowEmptyArchive: true
+            junit 'playwright-report/*.xml' // If using JUnit reporter
+        }
+    }
 }
+
